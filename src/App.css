@@ -1,0 +1,5 @@
+.active-menu {
+  border-bottom: 3px solid #ff3f6c;
+  color: #ff3f6c;
+  font-weight: bold;
+}
