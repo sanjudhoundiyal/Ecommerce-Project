@@ -188,6 +188,8 @@ function AdminDashbord() {
           <div style={styles.navItem} onClick={() => navigate("/admin/product")}>📦 Products</div>
           <div style={styles.navItem} onClick={() => navigate("/admin/users")}>👤 Users</div>
           <div style={styles.navItem} onClick={() => navigate("/admin/category")}>📂 Categories</div>
+            <div style={styles.navItem} onClick={() => navigate("/admin/subcategory")}>🗂️ Subcategory</div>
+              <div style={styles.navItem} onClick={() => navigate("/admin/banner")}>🎉 Banner</div>
           <div style={styles.navItem} onClick={() => navigate("/admin/orders")}>🚚 Orders</div>
           <div style={styles.navItem} onClick={() => navigate("/admin/sellers")}>🏪 Sellers</div>
           <div style={styles.navItem} onClick={() => navigate("/seller/dashboard")}>📊 Seller Panel</div>

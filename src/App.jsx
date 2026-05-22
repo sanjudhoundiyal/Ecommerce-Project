@@ -13,7 +13,7 @@ import SearchPage from "./PAGE/User Page/SearchPage.jsx";
 import Login from "./PAGE/User Page/Login.jsx";
 import Register from "./PAGE/User Page/Registration.jsx";
 import Profile from "./PAGE/User Page/Profile.jsx";
-
+import CategoryProducts from "./PAGE/User Page/CategoryProducts.jsx";
 import Product from "./PAGE/User Page/Product.jsx";
 import ProductDetail from "./PAGE/User Page/ProductDetails.jsx";
 
@@ -48,7 +48,7 @@ import Adminregister from "./PAGE/Admin page/Adminregister.jsx";
 import AdminSellers from "./PAGE/Admin page/AdminSaller.jsx";
 import AdminProfile from "./PAGE/Admin page/AdminProfile.jsx";
 import AdminDashbord from "./PAGE/Admin page/AdminDashborad.jsx";
-import AdminBanner from "./PAGE/Admin Page/AdminBanner.jsx";
+import AdminBanner from "./PAGE/Admin page/AdminBanner";
 function Layout() {
   const location = useLocation();
 
@@ -62,6 +62,8 @@ function Layout() {
       <Routes>
         {/* User Routes */}
         <Route path="/" element={<Home />} />
+        
+        <Route path="/products" element={<Product />} />
         <Route path="/products/:slug" element={<Product />} />
         <Route path="/product/:slug" element={<ProductDetail />} />
         <Route path="/search/:keyword" element={<SearchPage />} />
@@ -74,7 +76,7 @@ function Layout() {
         <Route path="/orders" element={<Orderhistory />} />
 
         <Route path="/wishlist" element={<Wishlist />} />
-
+<Route path="/category/:slug" element={<CategoryProducts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
@@ -95,8 +97,8 @@ function Layout() {
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/sellers" element={<AdminSellers />} />
-        <Route path="/admin/banner" element={<AdminBanner />} />
 
+        <Route path="/admin/banner" element={<AdminBanner />} />
         {/* Seller Routes */}
         <Route path="/seller/register" element={<RegisterSeller />} />
         <Route path="/seller/login" element={<SellerLogin />} />

@@ -1,15 +1,22 @@
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 function AdminBanner() {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [offerText, setOfferText] = useState("");
+  const [buttonLink, setButtonLink] = useState("");
+  const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+  const [bannerType, setBannerType] = useState("");
+  const [productId, setProductId] = useState("");
   const [image, setImage] = useState(null);
   const [banners, setBanners] = useState([]);
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(false);
- const navigate = useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchBanners();
   }, []);
@@ -21,6 +28,20 @@ function AdminBanner() {
       .catch((err) => console.error("Error fetching banners:", err));
   };
 
+  const resetForm = () => {
+    setTitle("");
+    setSubtitle("");
+    setDescription("");
+    setOfferText("");
+    setButtonLink("");
+    setCategory("");
+    setBrand("");
+    setBannerType("");
+    setProductId("");
+    setImage(null);
+    setEditId(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,8 +49,14 @@ function AdminBanner() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("subtitle", subtitle);
+    formData.append("description", description);
+    formData.append("offerText", offerText);
+    formData.append("buttonLink", buttonLink);
+    formData.append("category", category);
+    formData.append("brand", brand);
+    formData.append("bannerType", bannerType);
+    formData.append("productId", productId);
     
-    // Agar image select ki hai tabhi append karein
     if (image) {
       formData.append("image", image);
     }
@@ -44,19 +71,11 @@ function AdminBanner() {
       const response = await fetch(url, {
         method,
         body: formData,
-        // (Note: Content-Type header explicitly set karne ki zaroorat nahi hai 
-        // jab hum FormData bhejte hain, browser apne aap boundary set kar deta hai)
       });
 
       if (response.ok) {
         alert(editId ? "Banner Updated ✅" : "Banner Added ✅");
-        
-        // Reset form states
-        setTitle("");
-        setSubtitle("");
-        setImage(null);
-        setEditId(null);
-        
+        resetForm();
         fetchBanners();
       } else {
         const errorText = await response.text();
@@ -90,24 +109,32 @@ function AdminBanner() {
   };
 
   const handleEdit = (b) => {
-    setTitle(b.title);
-    setSubtitle(b.subtitle);
+    setTitle(b.title || "");
+    setSubtitle(b.subtitle || "");
+    setDescription(b.description || "");
+    setOfferText(b.offerText || "");
+    setButtonLink(b.buttonLink || "");
+    setCategory(b.category || "");
+    setBrand(b.brand || "");
+    setBannerType(b.bannerType || "");
+    setProductId(b.productId ? b.productId.toString() : "");
     setEditId(b.id);
   };
 
   return (
     <div style={styles.adminContainer}>
       <div style={styles.contentLayout}>
-
-         <button 
-          onClick={() => navigate("/admin")} // 3. Logic to go back
-          className="btn btn-outline-secondary btn-sm mb-3 d-flex align-items-center gap-2"
-          style={{ borderRadius: "8px" }}
-        >
-          <i className="bi bi-arrow-left"></i> Back to Dashboard
-        </button>
+        
         {/* Form Panel */}
         <div style={styles.panel}>
+          <button 
+            onClick={() => navigate("/admin")} 
+            className="btn btn-outline-secondary btn-sm mb-3 d-flex align-items-center gap-2"
+            style={{ borderRadius: "8px" }}
+          >
+            <i className="bi bi-arrow-left"></i> Back to Dashboard
+          </button>
+
           <div style={styles.header}>
             <h2 style={styles.title}>{editId ? "Edit Banner" : "Add New Banner"}</h2>
             <p style={styles.subtitleText}>
@@ -141,6 +168,84 @@ function AdminBanner() {
             </div>
 
             <div style={styles.inputGroup}>
+              <label style={styles.label}>Description</label>
+              <input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="e.g., Premium quality clothes"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Offer Text</label>
+              <input
+                value={offerText}
+                onChange={(e) => setOfferText(e.target.value)}
+                placeholder="e.g., Limited Time Offer"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Button Link URL</label>
+              <input
+                value={buttonLink}
+                onChange={(e) => setButtonLink(e.target.value)}
+                placeholder="e.g., /products/summer"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Category Slug / Target</label>
+              <input
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="e.g., fashion"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Brand</label>
+              <input
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                placeholder="e.g., Nike"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Banner Type</label>
+              <input
+                value={bannerType}
+                onChange={(e) => setBannerType(e.target.value)}
+                placeholder="e.g., main-hero"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Target Product Database ID (Long)</label>
+              <input
+                type="number"
+                value={productId}
+                onChange={(e) => setProductId(e.target.value)}
+                placeholder="e.g., 12"
+                style={styles.input}
+                required
+              />
+            </div>
+
+            <div style={styles.inputGroup}>
               <label style={styles.label}>Banner Image</label>
               <div style={styles.fileUploadWrapper}>
                 <input
@@ -148,6 +253,7 @@ function AdminBanner() {
                   id="banner-image"
                   onChange={(e) => setImage(e.target.files[0])}
                   style={styles.fileInput}
+                  required={!editId} 
                 />
                 <label htmlFor="banner-image" style={styles.fileLabel}>
                   {image ? image.name : "Choose a file..."}
@@ -162,12 +268,7 @@ function AdminBanner() {
               {editId && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setTitle("");
-                    setSubtitle("");
-                    setImage(null);
-                    setEditId(null);
-                  }}
+                  onClick={resetForm}
                   style={styles.cancelButton}
                 >
                   Cancel
@@ -209,6 +310,9 @@ function AdminBanner() {
                     <div style={styles.cardBody}>
                       <h4 style={styles.cardTitle}>{b.title}</h4>
                       <p style={styles.cardSubtitle}>{b.subtitle}</p>
+                      <small style={{ color: '#94a3b8', display: 'block', margin: '4px 0' }}>
+                        Product Linked ID: {b.productId}
+                      </small>
                       <div style={styles.cardActions}>
                         <button
                           onClick={() => handleEdit(b)}
@@ -251,7 +355,7 @@ const styles = {
     maxWidth: "1200px",
     margin: "0 auto",
     display: "grid",
-    gridTemplateColumns: "1fr 1.5fr",
+    gridTemplateColumns: "1fr 1.2fr",
     gap: "32px",
   },
   panel: {
@@ -260,6 +364,7 @@ const styles = {
     borderRadius: "12px",
     boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
     border: "1px solid #e2e8f0",
+    height: "fit-content",
   },
   header: {
     marginBottom: "28px",
@@ -304,10 +409,12 @@ const styles = {
     outline: "none",
     transition: "border-color 0.2s",
     boxSizing: "border-box",
+    width: "100%",
   },
   fileUploadWrapper: {
     display: "flex",
     alignItems: "center",
+    width: "100%",
   },
   fileInput: {
     display: "none",
@@ -328,6 +435,7 @@ const styles = {
   buttonGroup: {
     display: "flex",
     gap: "12px",
+    marginTop: "10px",
   },
   submitButton: {
     flex: 1,

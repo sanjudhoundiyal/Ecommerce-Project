@@ -3,6 +3,7 @@ import { useCart } from "./CartContext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
+
 function Cart() {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ function Cart() {
   const [selectedItems, setSelectedItems] = useState(
     cartItems.map((item) => item.id)
   );
+
+
 
   useEffect(() => {
   setSelectedItems(cartItems.map((item) => item.id));
@@ -23,6 +26,20 @@ function Cart() {
         : [...prev, id]
     );
   };
+
+
+   useEffect(() => {
+    const handleCartUpdate = () => {
+      window.location.reload();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
+
 
   // Toggle Select All
   const toggleSelectAll = () => {
@@ -164,12 +181,49 @@ function Cart() {
                           {p.name}
                         </h6>
                         {/* THE FIX: Dynamic size rendering with an explicit fallback to "M" */}
-                       <span className="text-muted small d-block mb-2">
-  Size:{" "}
-  <span className="text-dark fw-medium">
-    {item.size ? item.size : "Not Selected"}
-  </span>
-</span>
+{(() => {
+  const noSizeCategories = [
+    "watch",
+    "laptop",
+    "laptoop",
+    "buds",
+    "buts",
+    "earbuds",
+    "ear buts",
+    "headphone",
+    "mobile",
+    "phone",
+    "tablet",
+    "camera",
+    "speaker",
+    "smartwatch",
+    "airpods",
+    "airdopes",
+    "vs104",
+    "air dopes",
+  ];
+
+  const categoryText = `
+    ${p.name || ""}
+    ${p.categoryName || ""}
+    ${p.subCategoryName || ""}
+  `.toLowerCase();
+
+  const isElectronic = noSizeCategories.some((keyword) =>
+    categoryText.includes(keyword)
+  );
+
+  return (
+    item.size &&
+    !isElectronic &&
+    !["N/A", "NA", "null", "One Size", "Default", "M"].includes(item.size) &&
+    item.size.trim() !== "" && (
+      <p className="text-muted small d-block mb-2">
+        Size: <span className="text-dark fw-medium">{item.size}</span>
+      </p>
+    )
+  );
+})()}
                         <div
                           className="d-flex align-items-center border rounded-pill bg-light p-1"
                           style={{ width: "fit-content" }}

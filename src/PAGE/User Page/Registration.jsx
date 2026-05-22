@@ -33,23 +33,30 @@ function Register() {
     // --- VALIDATION LOGIC ---
     if (!user.name.trim()) newErrors.name = "Name is required";
     
-    // Email length check (Min 8 characters as requested)
-    if (user.email.length < 8) {
-      newErrors.email = "Email must be at least 8 characters";
-    } else if (!/\S+@\S+\.\S+/.test(user.email)) {
-      newErrors.email = "Invalid email format";
-    }
+    // Email length check (Min 50 characters as requested)
+   // Email validation
+if (!user.email.trim()) {
+  newErrors.email = "Email is required";
+} else if (user.email.length > 50) {
+  newErrors.email = "Email must be less than 50 characters";
+} else if (!/\S+@\S+\.\S+/.test(user.email)) {
+  newErrors.email = "Invalid email format";
+}
 
     // Phone length check (Exactly 10 digits)
-    if (!/^\d{10}$/.test(user.phone)) {
-      newErrors.phone = "Phone must be exactly 10 digits";
-    }
+// Phone validation
+const phone = user.phone?.trim();
 
+if (!/^[6-9]\d{9}$/.test(phone)) {
+  newErrors.phone = "Enter a valid 10-digit mobile number";
+}
     // Pincode length check (Exactly 6 digits)
-    if (!/^\d{6}$/.test(user.pincode)) {
-      newErrors.pincode = "Pincode must be 6 digits";
-    }
+ if (!user.pincode.trim()) {
+  newErrors.pincode = "Pincode is required";
 
+} else if (!/^[1-9][0-9]{5}$/.test(user.pincode)) {
+  newErrors.pincode = "Enter a valid pincode";
+}
     if (!user.city) newErrors.city = "City is required";
 
     if (user.password.length < 6) {
@@ -66,21 +73,44 @@ function Register() {
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:8080/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
+  try {
+  const payload = {
+    name: user.name,
+    email: user.email,
+    password: user.password,
+    phone: user.phone,
+    city: user.city,
+    pincode: user.pincode,
+  };
 
-      if (response.ok) {
-        navigate("/login");
-      } else {
-        const errorData = await response.json();
-        setErrors({ server: errorData.message || "Registration Failed" });
-      }
-    } catch (error) {
-      setErrors({ server: "Something Went Wrong" });
+  const response = await fetch("http://localhost:8080/api/users/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.ok) {
+    navigate("/login");
+  } else {
+
+  const errorText = await response.text();
+
+setErrors({
+  email: "Oops! Something Weng Wrong."
+});
+
+
+    // setErrors({
+    //   server: errorData.message || "Registration Failed",
+   
+  }
+} catch (error) {
+  setErrors({
+    server: "Something Went Wrong",
+  });
+
     }
   };
 
@@ -137,7 +167,24 @@ function Register() {
 
                   <div className="col-md-6 mb-3">
                     <label className="form-label small fw-bold text-secondary">Pincode</label>
-                    <input type="text" name="pincode" className="form-control" style={{...inputStyle, borderColor: errors.pincode ? "red" : "#ddd"}} onChange={handleChange} />
+                    <input
+  type="text"
+  name="pincode"
+  maxLength="6"
+  className="form-control"
+  style={{
+    ...inputStyle,
+    borderColor: errors.pincode ? "red" : "#ddd"
+  }}
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setUser({ ...user, pincode: value });
+
+    if (errors.pincode) {
+      setErrors({ ...errors, pincode: "" });
+    }
+  }}
+/>
                     <ErrorMsg msg={errors.pincode} />
                   </div>
 

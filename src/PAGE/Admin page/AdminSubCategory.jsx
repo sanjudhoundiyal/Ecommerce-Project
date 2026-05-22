@@ -1,6 +1,6 @@
     import React, { useState, useEffect } from "react";
     import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
     function AdminSubCategory() {
       const [subcategories, setSubcategories] = useState([]);
       const [categories, setCategories] = useState([]); 
@@ -68,12 +68,17 @@
           });
 
           if (res.ok) {
-            alert("🚀 SubCategory Created!");
+
+            Swal.fire({title:" 🚀SubCategory Created!"})
+           
             resetForm();
             loadSub();
           }
         } catch (err) {
-          alert("Error creating subcategory");
+
+          
+            Swal.fire({title:" 🚀 Error Creating SubCategory Created!"})
+        
         }
       };
 
@@ -90,12 +95,23 @@
             }),
           });
           if (res.ok) {
-            alert("✅ SubCategory Updated!");
+               Swal.fire({
+              icon: "success",
+              title: editId ? "Updated Successfully" : "Added Successfully",
+              text: editId
+                ? "Your data has been updated successfully."
+                : "Your data has been added successfully.",
+              confirmButtonColor: "#ff3f6c",
+              timer: 2000,
+              showConfirmButton: false,
+            });
             resetForm();
             loadSub();
           }
         } catch (err) {
-          alert("❌ Server error during update");
+          
+            Swal.fire({title:" Server Error during update"})
+      
         }
       };
 
@@ -104,12 +120,24 @@
         try {
           const res = await fetch(`${BASE_URL}/api/subcategories/${id}`, { method: "DELETE" });
           if (res.ok) {
-            alert("🗑️ Deleted!");
+           Swal.fire({
+  icon: "success",
+  title: "Deleted!",
+  text: "Item has been deleted successfully.",
+  showConfirmButton: false,
+  timer: 2000,
+});
             if (editId === id) resetForm();
             loadSub();
           }
         } catch (err) {
-          alert("❌ Delete failed");
+          Swal.fire({
+  icon: "Warning",
+  title: "Deleted!",
+  text: "Item Delete Fails",
+  showConfirmButton: false,
+  timer: 2000,
+});
         }
       };
 

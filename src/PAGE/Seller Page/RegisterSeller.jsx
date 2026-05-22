@@ -68,15 +68,38 @@ const RegisterSeller = () => {
 
       if (response.ok) {
         localStorage.setItem("sellerId", data.id);
-        Swal.fire("Success", "Seller Registered Successfully", "success").then(() => {
+       
+       Swal.fire({
+  icon: "success",
+  title: "Success",
+  text: " Register Successful",
+  confirmButtonColor: "#ff3f6c",
+}).then(() => {
+      
           navigate("/seller/login");
         });
       } else {
-        Swal.fire("Error", data.message || "Registration Failed", "error");
+        
+ Swal.fire({
+  icon: "warning",
+  title: "Warning",
+  text: "Something went wrong. Please try again later.",
+  confirmButtonColor: "#ff3f6c"
+
+
+        })
+
+
+        ("Error", data.message || "Registration Failed", "error");
    
       }
     } catch (error) {
-      Swal.fire("Error", "Server error. Please try again later.", "error");
+      Swal.fire({
+  icon: "warning",
+  title: "Warning",
+  text: "Something went wrong. Please try again later.",
+  confirmButtonColor: "#ff3f6c"
+      })
 
     }
     setLoading(false);

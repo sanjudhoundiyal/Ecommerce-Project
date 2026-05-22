@@ -52,8 +52,11 @@ if (!formData.email || formData.email.length > 20)
 if (!/\S+@\S+\.\S+/.test(formData.email))
   return "Invalid email";
 
-if (!/^[6-9]\d{9}$/.test(formData.phone))
-  return "Phone number must be 10 digits";
+const phone = formData.phone?.trim();
+
+if (!/^[6-9]\d{9}$/.test(phone)) {
+  return "Enter a valid 10-digit mobile number";
+}
 
 if (!/^\d{6}$/.test(formData.pincode))
   return "Pincode must be 6 digits";

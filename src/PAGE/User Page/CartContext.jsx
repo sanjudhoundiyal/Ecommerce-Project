@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import Swal from "sweetalert2";
 
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
@@ -27,12 +28,11 @@ export const CartProvider = ({ children }) => {
   const clearCartUI = () => {
     setCartItems([]);
   };
-
- const addToCart = async (product, size) => {
+const addToCart = async (product, size) => {
   const userId = getUserId();
 
   if (!userId) {
-    alert("Please login first ❌");
+    Swal.fire("Error", "You must be logged in to add items to the cart.", "error");
     return false;
   }
 
@@ -42,7 +42,11 @@ export const CartProvider = ({ children }) => {
       { method: "POST" }
     );
 
-    if (res.ok) await fetchCart();
+    if (res.ok) {
+      const updatedCart = await res.json();
+      setCartItems(updatedCart);
+    }
+
     return res.ok;
   } catch (err) {
     return false;

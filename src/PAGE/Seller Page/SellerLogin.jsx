@@ -113,13 +113,26 @@ function SellerLogin() {
       });
 
       if (verifyRes.ok) {
-        Swal.fire("Success", "Password updated successfully! Please login.", "success");
+       Swal.fire({
+  icon: "success",
+  title: "Success",
+  text: "Password updated successfully! Please login.",
+
+  color: "#fff",
+  confirmButtonColor: "#ff3f6c"
+});
       } else {
         const verifyError = await verifyRes.text();
         Swal.fire("Error", verifyError || "Invalid OTP verification failed.", "error");
       }
     } catch (err) {
-      Swal.fire("Error", err.message || "Something went wrong.", "error");
+          Swal.fire({
+  icon: "warning",
+  title: "warning",
+  text: "Something Went Wrong",
+  color: "#fff",
+  confirmButtonColor: "#ff3f6c"
+});
     }
   };
 

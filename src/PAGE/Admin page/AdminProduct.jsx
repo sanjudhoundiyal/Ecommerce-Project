@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
 function AdminProduct() {
   const [product, setProduct] = useState({
     name: "",
@@ -89,8 +91,7 @@ function AdminProduct() {
     formData.append("description", product.description);
     formData.append("subcategoryId", product.subcategoryId);
 
-    // ✅ FIXED: Using 'DeliveryDate' to match Spring Boot @RequestParam
-    formData.append("DeliveryDate", product.deliveryDays); 
+formData.append("deliveryDays", product.deliveryDays);
 
     if (imageFile) formData.append("image", imageFile);
 
@@ -102,14 +103,32 @@ function AdminProduct() {
       if (response.ok) {
         resetForm();
         loadProducts();
-        alert(editId ? "Product updated!" : "Product published!");
+        Swal.fire({
+  icon: "success",
+  title: editId ? "Updated Successfully" : "Added Successfully",
+  text: editId
+    ? "Your data has been updated successfully."
+    : "Your data has been added successfully.",
+  confirmButtonColor: "#ff3f6c",
+  timer: 2000,
+  showConfirmButton: false,
+});
       } else {
         const errorMsg = await response.text();
         console.error("Server Error:", errorMsg);
-        alert("Server Error: " + errorMsg);
+       Swal.fire({
+  icon: "error",
+  title: "Server Error",
+  text: errorMsg,
+});
       }
     } catch (err) {
-      alert("Error saving product.");
+
+    Swal.fire({
+  icon: "error",
+  title: "Error",
+  text: "Error saving product.",
+});
     } finally {
       setLoading(false);
     }

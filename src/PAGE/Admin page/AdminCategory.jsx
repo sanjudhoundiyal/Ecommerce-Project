@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 function AdminCategory() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -20,7 +21,7 @@ function AdminCategory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editId
-      ? `http://localhost:8080/api/categories/${editId}`
+      ? `http://localhost:8080/api/categories/update/${editId}`
       : "http://localhost:8080/api/admin/addcategory";
     const method = editId ? "PUT" : "POST";
 
@@ -31,11 +32,24 @@ function AdminCategory() {
     });
 
     if (res.ok) {
-      alert(editId ? "Updated ✅" : "Added ✅");
+   Swal.fire({
+  icon: "success",
+  title: editId ? "Updated Successfully" : "Added Successfully",
+  text: editId
+    ? "Your data has been updated successfully."
+    : "Your data has been added successfully.",
+  confirmButtonColor: "#ff3f6c",
+  timer: 2000,
+  showConfirmButton: false,
+});
       setName(""); setSlug(""); setDescription(""); setEditId(null);
       loadCategories();
     } else {
-      alert("Error ❌");
+    Swal.fire({
+  icon: "error",
+  title: "Error",
+  text: "Something went wrong!",
+});
     }
   };
 

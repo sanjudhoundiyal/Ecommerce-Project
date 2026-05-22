@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 function SellerProduct() {
   const navigate = useNavigate();
   
@@ -128,13 +128,26 @@ function SellerProduct() {
       if (response.ok) {
         resetForm();
         loadProducts();
-        alert(editId ? "Product updated!" : "Product published to shop!");
+              Swal.fire({
+         icon: "success",
+         title: editId ? "Product Updated!" : "Product Published!",
+         showConfirmButton: false,
+         timer: 2000,
+       });
       } else {
         const errorMsg = await response.text();
-        alert("Error: " + errorMsg);
+       Swal.fire({
+  icon: "error",
+  title: "Error",
+  text: errorMsg,
+});
       }
     } catch (err) {
-      alert("Error saving product.");
+    Swal.fire({
+  icon: "error",
+  title: "Error Saving Product",
+  text: errorMsg,
+});
     } finally {
       setLoading(false);
     }
@@ -271,7 +284,19 @@ function SellerProduct() {
                   <tr key={p.productId || p.id}>
                     <td style={s.td}>
                       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                        <img src={p.imageUrl ? `http://localhost:8080${p.imageUrl}` : "https://via.placeholder.com/50"} style={s.prodImg} alt="" />
+<img
+  src={
+    p.imageUrl
+      ? `http://localhost:8080${p.imageUrl.startsWith("/") ? "" : "/"}${p.imageUrl}`
+      : "https://via.placeholder.com/50"
+  }
+  style={s.prodImg}
+  alt={p.name}
+  onError={(e) => {
+    console.log("Image failed:", p.imageUrl);
+    e.target.src = "https://via.placeholder.com/50";
+  }}
+/>
                         <div>
                           <div style={{fontWeight: "600", fontSize: "14px"}}>{p.name}</div>
                           <div style={{fontSize: '11px', color: theme.secondary}}>

@@ -22,10 +22,6 @@ function Profile() {
     role: "" 
   });
 
-  const [wishlistItems, setWishlistItems] = useState([
-    { id: 1, name: "Premium Leather Jacket", price: "₹ 4,999", image: "https://via.placeholder.com/150" },
-    { id: 2, name: "Minimalist Watch", price: "₹ 2,499", image: "https://via.placeholder.com/150" }
-  ]);
 
   useEffect(() => {
     handleResizeFix();
@@ -118,7 +114,7 @@ if (!formData.email.trim()) {
     if (!validate()) {
       return Swal.fire({
         title: "Validation Error",
-        text: "Please check Valied Email Fields.",
+    text: "Please enter valid data.",
         icon: "warning",
         confirmButtonColor: brandColor
       });
@@ -133,7 +129,6 @@ if (!formData.email.trim()) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
         const updatedData = await response.json();
         localStorage.setItem("user", JSON.stringify(updatedData));
@@ -384,13 +379,7 @@ if (!formData.email.trim()) {
             <p className="text-secondary fw-medium">View and update your personal profile details</p>
           </div>
 
-          <button 
-            onClick={() => navigate(-1)} 
-            className="btn btn-outline-secondary d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm bg-white fw-bold transition-all"
-            style={{ borderColor: "#cbd5e1" }}
-          >
-            {Icons.Back} Go Back
-          </button>
+          
         </header>
 
         <div className="card border-0 shadow-lg" style={{ borderRadius: "30px", backgroundColor: "#ffffff" }}>
